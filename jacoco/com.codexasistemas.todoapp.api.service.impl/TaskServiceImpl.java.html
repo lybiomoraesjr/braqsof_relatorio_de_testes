@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TaskServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">api</a> &gt; <a href="index.source.html" class="el_package">com.codexasistemas.todoapp.api.service.impl</a> &gt; <span class="el_source">TaskServiceImpl.java</span></div><h1>TaskServiceImpl.java</h1><pre class="source lang-java linenums">package com.codexasistemas.todoapp.api.service.impl;
+
+import com.codexasistemas.todoapp.api.dto.task.TaskRequestDto;
+import com.codexasistemas.todoapp.api.dto.task.TaskResponseDto;
+import com.codexasistemas.todoapp.api.mapper.TaskMapper;
+import com.codexasistemas.todoapp.api.model.Category;
+import com.codexasistemas.todoapp.api.model.Location;
+import com.codexasistemas.todoapp.api.model.Tag;
+import com.codexasistemas.todoapp.api.model.Task;
+import com.codexasistemas.todoapp.api.model.User;
+import com.codexasistemas.todoapp.api.repository.interfaces.TaskRepository;
+import com.codexasistemas.todoapp.api.service.interfaces.TaskService;
+import com.codexasistemas.todoapp.api.service.interfaces.CategoryService;
+import com.codexasistemas.todoapp.api.service.interfaces.TagService;
+import com.codexasistemas.todoapp.api.service.interfaces.UserService;
+
+import jakarta.persistence.EntityNotFoundException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+@Service
+<span class="fc" id="L28">public class TaskServiceImpl implements TaskService {</span>
+
+    @Autowired
+    private TaskRepository taskRepository;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private CategoryService categoryService;
+
+    @Autowired
+    private TagService tagService;
+
+    @Override
+    public List&lt;TaskResponseDto&gt; findAll() {
+<span class="nc" id="L44">        return taskRepository.findAll().stream()</span>
+<span class="nc" id="L45">                .map(TaskMapper::toResponseDto)</span>
+<span class="nc" id="L46">                .collect(Collectors.toList());</span>
+    }
+
+    @Override
+    public Optional&lt;TaskResponseDto&gt; findById(Long id) {
+<span class="fc" id="L51">        return taskRepository.findById(id)</span>
+<span class="fc" id="L52">                .map(TaskMapper::toResponseDto);</span>
+    }
+
+    @Override
+    public TaskResponseDto create(TaskRequestDto taskRequest) {
+<span class="fc" id="L57">        User user = userService.findByIdEntity(taskRequest.userId());</span>
+<span class="fc" id="L58">        Category category = categoryService.findByIdEntity(taskRequest.categoryId());</span>
+<span class="fc bfc" id="L59" title="All 2 branches covered.">        List&lt;Tag&gt; tags = taskRequest.tagIds() != null ? taskRequest.tagIds().stream()</span>
+<span class="fc" id="L60">                .map(tagService::findByIdEntity)</span>
+<span class="fc" id="L61">                .collect(Collectors.toList()) : new ArrayList&lt;&gt;();</span>
+
+<span class="fc" id="L63">        Task task = TaskMapper.toEntity(taskRequest, user, category, tags);</span>
+<span class="fc" id="L64">        Task savedTask = taskRepository.save(task);</span>
+<span class="fc" id="L65">        return TaskMapper.toResponseDto(savedTask);</span>
+    }
+
+    @Override
+    public TaskResponseDto delete(Long id) {
+<span class="nc" id="L70">        Task task = taskRepository.findById(id)</span>
+<span class="nc" id="L71">                .orElseThrow(() -&gt; new EntityNotFoundException(&quot;Tarefa não encontrada: &quot; + id));</span>
+<span class="nc" id="L72">        TaskResponseDto responseDto = TaskMapper.toResponseDto(task);</span>
+<span class="nc" id="L73">        taskRepository.deleteById(task.getId());</span>
+<span class="nc" id="L74">        return responseDto;</span>
+    }
+
+    @Override
+    public TaskResponseDto update(Long id, TaskRequestDto taskRequest) {
+<span class="nc" id="L79">        Task existingTask = taskRepository.findById(id)</span>
+<span class="nc" id="L80">                .orElseThrow(() -&gt; new EntityNotFoundException(&quot;Tarefa não encontrada: &quot; + id));</span>
+
+<span class="nc" id="L82">        User user = userService.findByIdEntity(taskRequest.userId());</span>
+<span class="nc" id="L83">        Category category = categoryService.findByIdEntity(taskRequest.categoryId());</span>
+<span class="nc bnc" id="L84" title="All 2 branches missed.">        List&lt;Tag&gt; tags = taskRequest.tagIds() != null ? taskRequest.tagIds().stream()</span>
+<span class="nc" id="L85">                .map(tagService::findByIdEntity)</span>
+<span class="nc" id="L86">                .collect(Collectors.toList()) : new ArrayList&lt;&gt;();</span>
+
+<span class="nc" id="L88">        existingTask.updateTitle(taskRequest.title());</span>
+<span class="nc" id="L89">        existingTask.updateDescription(taskRequest.description());</span>
+<span class="nc" id="L90">        existingTask.assignUser(user);</span>
+<span class="nc" id="L91">        existingTask.changeCategory(category);</span>
+<span class="nc" id="L92">        existingTask.setTags(tags);</span>
+<span class="nc" id="L93">        existingTask.setDueDate(taskRequest.dueDate());</span>
+
+<span class="nc bnc" id="L95" title="All 6 branches missed.">        if (taskRequest.location() != null &amp;&amp; taskRequest.location().latitude() != null &amp;&amp; taskRequest.location().longitude() != null) {</span>
+<span class="nc" id="L96">            Location location = new Location(</span>
+<span class="nc" id="L97">                    taskRequest.location().latitude(),</span>
+<span class="nc" id="L98">                    taskRequest.location().longitude(),</span>
+<span class="nc" id="L99">                    taskRequest.location().locationName(),</span>
+<span class="nc" id="L100">                    taskRequest.location().locationDescription());</span>
+<span class="nc" id="L101">            existingTask.setLocation(location);</span>
+<span class="nc" id="L102">        } else {</span>
+<span class="nc" id="L103">            existingTask.setLocation(null);</span>
+        }
+
+<span class="nc" id="L106">        Task updatedTask = taskRepository.save(existingTask);</span>
+<span class="nc" id="L107">        return TaskMapper.toResponseDto(updatedTask);</span>
+    }
+
+    @Override
+    public List&lt;TaskResponseDto&gt; findByUserId(Long userId) {
+<span class="nc" id="L112">        return taskRepository.findByUserId(userId).stream()</span>
+<span class="nc" id="L113">                .map(TaskMapper::toResponseDto)</span>
+<span class="nc" id="L114">                .collect(Collectors.toList());</span>
+    }
+
+    @Override
+    public TaskResponseDto toggleStatus(Long id) {
+<span class="fc" id="L119">        Task task = taskRepository.findById(id)</span>
+<span class="pc" id="L120">                .orElseThrow(() -&gt; new EntityNotFoundException(&quot;Tarefa não encontrada: &quot; + id));</span>
+        
+<span class="fc" id="L122">        task.toggleStatus();</span>
+<span class="fc" id="L123">        Task updatedTask = taskRepository.save(task);</span>
+<span class="fc" id="L124">        return TaskMapper.toResponseDto(updatedTask);</span>
+    }
+
+    @Override
+    public void cancel(Long id) {
+<span class="fc" id="L129">        Task task = taskRepository.findById(id)</span>
+<span class="pc" id="L130">                .orElseThrow(() -&gt; new EntityNotFoundException(&quot;Tarefa não encontrada: &quot; + id));</span>
+<span class="fc" id="L131">        task.cancel();</span>
+<span class="fc" id="L132">        taskRepository.save(task);</span>
+<span class="fc" id="L133">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

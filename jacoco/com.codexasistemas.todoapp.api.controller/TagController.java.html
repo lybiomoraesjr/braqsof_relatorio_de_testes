@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TagController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">api</a> &gt; <a href="index.source.html" class="el_package">com.codexasistemas.todoapp.api.controller</a> &gt; <span class="el_source">TagController.java</span></div><h1>TagController.java</h1><pre class="source lang-java linenums">package com.codexasistemas.todoapp.api.controller;
+
+import com.codexasistemas.todoapp.api.dto.tag.TagRequestDto;
+import com.codexasistemas.todoapp.api.dto.tag.TagResponseDto;
+import com.codexasistemas.todoapp.api.service.interfaces.TagService;
+
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
+import java.util.List;
+
+@RestController
+@RequestMapping(&quot;/api/tags&quot;)
+<span class="fc" id="L17">public class TagController {</span>
+
+    @Autowired
+    private TagService tagService;
+
+    @GetMapping
+    public List&lt;TagResponseDto&gt; findAll(@RequestParam(required = true) Long userId) {
+<span class="nc" id="L24">        return tagService.findByUserId(userId);</span>
+    }
+
+    @GetMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;TagResponseDto&gt; findById(@PathVariable Long id) {
+<span class="nc" id="L29">        return tagService.findById(id)</span>
+<span class="nc" id="L30">                .map(ResponseEntity::ok)</span>
+<span class="nc" id="L31">                .orElse(ResponseEntity.notFound().build());</span>
+    }
+
+    @PostMapping
+    public ResponseEntity&lt;TagResponseDto&gt; create(@Valid @RequestBody TagRequestDto tagRequest) {
+<span class="nc" id="L36">        TagResponseDto dto = tagService.create(tagRequest);</span>
+<span class="nc" id="L37">        return ResponseEntity.created(URI.create(&quot;/tags/&quot; + dto.id())).body(dto);</span>
+    }
+
+    @DeleteMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;TagResponseDto&gt; delete(@PathVariable Long id) {
+<span class="nc" id="L42">        TagResponseDto deletedTag = tagService.delete(id);</span>
+<span class="nc" id="L43">        return ResponseEntity.ok(deletedTag);</span>
+    }
+
+    @PutMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;TagResponseDto&gt; update(
+            @PathVariable Long id,
+            @Valid @RequestBody TagRequestDto tagRequest) {
+<span class="nc" id="L50">        TagResponseDto updatedTag = tagService.update(id, tagRequest);</span>
+<span class="nc" id="L51">        return ResponseEntity.ok(updatedTag);</span>
+    }
+} 
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

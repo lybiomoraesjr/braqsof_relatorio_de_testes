@@ -1,0 +1,110 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #eef1f5;
+    color: #333;
+}
+
+#banner {
+    background-color: #2c3e50;
+    color: #ffffff;
+    padding: 15px 20px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+#breadcrumbs {
+    background-color: #ffffff;
+    padding: 10px 20px;
+    border-bottom: 1px solid #ddd;
+    font-size: 0.9em;
+    color: #666;
+}
+
+#leftColumn {
+    background-color: #f8f9fa;
+    padding: 20px;
+    width: 200px;
+    float: left;
+    min-height: calc(100vh - 120px); /* Adjust based on header/footer height */
+    border-right: 1px solid #eee;
+}
+
+#bodyColumn {
+    margin-left: 240px; /* Width of leftColumn + padding */
+    padding: 20px;
+    background-color: #ffffff;
+    min-height: calc(100vh - 120px);
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+
+h1, h2, h3 {
+    color: #2c3e50;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    margin-top: 20px;
+}
+
+table.bodyTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+table.bodyTable th, table.bodyTable td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+table.bodyTable th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    color: #555;
+}
+
+table.bodyTable tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+table.bodyTable tr:hover {
+    background-color: #f1f1f1;
+}
+
+.a, .b { /* Maven Doxia alternating row classes */
+    /* Already handled by nth-child, but can be used for specific overrides */
+}
+
+.success {
+    color: #28a745;
+    font-weight: bold;
+}
+
+.failure {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+.error {
+    color: #ffc107;
+    font-weight: bold;
+}
+
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.poweredBy {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.poweredBy img {
+    border: none;
+}
