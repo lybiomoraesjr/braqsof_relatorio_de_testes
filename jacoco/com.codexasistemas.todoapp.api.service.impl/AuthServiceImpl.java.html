@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AuthServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">api</a> &gt; <a href="index.source.html" class="el_package">com.codexasistemas.todoapp.api.service.impl</a> &gt; <span class="el_source">AuthServiceImpl.java</span></div><h1>AuthServiceImpl.java</h1><pre class="source lang-java linenums">package com.codexasistemas.todoapp.api.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.codexasistemas.todoapp.api.dto.auth.LoginRequestDto;
+import com.codexasistemas.todoapp.api.dto.auth.LoginResponseDto;
+import com.codexasistemas.todoapp.api.dto.auth.RegisterRequestDto;
+import com.codexasistemas.todoapp.api.dto.auth.RegisterResponseDto;
+import com.codexasistemas.todoapp.api.model.User;
+import com.codexasistemas.todoapp.api.repository.interfaces.UserRepository;
+import com.codexasistemas.todoapp.api.service.interfaces.AuthService;
+
+@Service
+<span class="fc" id="L15">public class AuthServiceImpl implements AuthService {</span>
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Override
+    public LoginResponseDto login(LoginRequestDto loginRequest) {
+<span class="nc" id="L22">        User user = userRepository.findByEmail(loginRequest.email());</span>
+<span class="nc bnc" id="L23" title="All 2 branches missed.">        if (user == null) {</span>
+<span class="nc" id="L24">            throw new IllegalArgumentException(&quot;Usuário não encontrado com o email: &quot; + loginRequest.email());</span>
+        }
+
+<span class="nc bnc" id="L27" title="All 2 branches missed.">        if (!user.getPassword().equals(loginRequest.password())) {</span>
+<span class="nc" id="L28">            throw new IllegalArgumentException(&quot;Senha incorreta.&quot;);</span>
+        }
+
+<span class="nc" id="L31">        return new LoginResponseDto(user.getId(), user.getName(), user.getEmail());</span>
+    }
+
+    @Override
+    public RegisterResponseDto register(RegisterRequestDto registerRequest) {
+<span class="nc" id="L36">        User user = new User();</span>
+        
+<span class="nc" id="L38">        user.setName(registerRequest.name());</span>
+<span class="nc" id="L39">        user.setEmail(registerRequest.email());</span>
+<span class="nc" id="L40">        user.setPassword(registerRequest.password());</span>
+<span class="nc" id="L41">        user = userRepository.save(user);</span>
+
+<span class="nc" id="L43">        return new RegisterResponseDto(user.getId(), user.getName(), user.getEmail());</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

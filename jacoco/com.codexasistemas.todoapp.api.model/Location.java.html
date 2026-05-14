@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Location.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">api</a> &gt; <a href="index.source.html" class="el_package">com.codexasistemas.todoapp.api.model</a> &gt; <span class="el_source">Location.java</span></div><h1>Location.java</h1><pre class="source lang-java linenums">package com.codexasistemas.todoapp.api.model;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Entity
+@Table(name = &quot;location&quot;)
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class Location {
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
+    private Double latitude;
+
+    @Column(nullable = false)
+    private Double longitude;
+
+    @Column(name = &quot;location_name&quot;)
+    private String locationName;
+
+    @Column(name = &quot;location_description&quot;)
+    private String locationDescription;
+
+    @OneToOne(mappedBy = &quot;location&quot;)
+    private Task task;
+
+<span class="fc" id="L36">    public Location(Double latitude, Double longitude, String locationName, String locationDescription) {</span>
+<span class="fc" id="L37">        this.latitude = latitude;</span>
+<span class="fc" id="L38">        this.longitude = longitude;</span>
+<span class="fc" id="L39">        this.locationName = locationName;</span>
+<span class="fc" id="L40">        this.locationDescription = locationDescription;</span>
+<span class="fc" id="L41">    }</span>
+
+    public void validateCoordinates() {
+<span class="pc bpc" id="L44" title="2 of 4 branches missed.">        if (latitude == null || longitude == null) {</span>
+<span class="nc" id="L45">            throw new IllegalArgumentException(&quot;Latitude e longitude são obrigatórios&quot;);</span>
+        }
+<span class="pc bpc" id="L47" title="2 of 4 branches missed.">        if (latitude &lt; -90 || latitude &gt; 90) {</span>
+<span class="nc" id="L48">            throw new IllegalArgumentException(&quot;Latitude deve estar entre -90 e 90 graus&quot;);</span>
+        }
+<span class="pc bpc" id="L50" title="2 of 4 branches missed.">        if (longitude &lt; -180 || longitude &gt; 180) {</span>
+<span class="nc" id="L51">            throw new IllegalArgumentException(&quot;Longitude deve estar entre -180 e 180 graus&quot;);</span>
+        }
+<span class="fc" id="L53">    }</span>
+} 
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

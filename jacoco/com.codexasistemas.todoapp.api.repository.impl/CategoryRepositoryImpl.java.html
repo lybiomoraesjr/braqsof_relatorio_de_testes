@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CategoryRepositoryImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">api</a> &gt; <a href="index.source.html" class="el_package">com.codexasistemas.todoapp.api.repository.impl</a> &gt; <span class="el_source">CategoryRepositoryImpl.java</span></div><h1>CategoryRepositoryImpl.java</h1><pre class="source lang-java linenums">package com.codexasistemas.todoapp.api.repository.impl;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.stereotype.Repository;
+
+import com.codexasistemas.todoapp.api.model.Category;
+import com.codexasistemas.todoapp.api.repository.interfaces.CategoryRepository;
+import com.codexasistemas.todoapp.api.repository.jpa.CategoryJpaRepository;
+
+@Repository
+public class CategoryRepositoryImpl implements CategoryRepository {
+
+    private final CategoryJpaRepository jpa;
+
+<span class="fc" id="L17">    public CategoryRepositoryImpl(CategoryJpaRepository jpa) {</span>
+<span class="fc" id="L18">        this.jpa = jpa;</span>
+<span class="fc" id="L19">    }</span>
+
+    @Override
+    public Category save(Category category) {
+<span class="nc" id="L23">        return jpa.save(category);</span>
+    }
+
+    @Override
+    public Optional&lt;Category&gt; findById(Long id) {
+<span class="fc" id="L28">        return jpa.findById(id);</span>
+    }
+
+    @Override
+    public List&lt;Category&gt; findAll() {
+<span class="nc" id="L33">        return jpa.findAll();</span>
+    }
+
+    @Override
+    public void deleteById(Long id) {
+<span class="nc" id="L38">        jpa.deleteById(id);</span>
+<span class="nc" id="L39">    }</span>
+
+    @Override
+    public List&lt;Category&gt; findByUserId(Long userId) {
+<span class="nc" id="L43">        return jpa.findByUserId(userId);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

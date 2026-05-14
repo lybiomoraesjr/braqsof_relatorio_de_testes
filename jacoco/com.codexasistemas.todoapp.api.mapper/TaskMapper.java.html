@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TaskMapper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">api</a> &gt; <a href="index.source.html" class="el_package">com.codexasistemas.todoapp.api.mapper</a> &gt; <span class="el_source">TaskMapper.java</span></div><h1>TaskMapper.java</h1><pre class="source lang-java linenums">package com.codexasistemas.todoapp.api.mapper;
+
+import com.codexasistemas.todoapp.api.dto.task.*;
+import com.codexasistemas.todoapp.api.dto.location.LocationDto;
+import com.codexasistemas.todoapp.api.model.*;
+
+import java.util.List;
+
+<span class="nc" id="L9">public class TaskMapper {</span>
+
+    public static TaskResponseDto toResponseDto(Task task) {
+<span class="fc" id="L12">        LocationDto locationDto = null;</span>
+<span class="fc bfc" id="L13" title="All 2 branches covered.">        if (task.getLocation() != null) {</span>
+<span class="fc" id="L14">            locationDto = new LocationDto(</span>
+<span class="fc" id="L15">                task.getLocation().getLatitude(),</span>
+<span class="fc" id="L16">                task.getLocation().getLongitude(),</span>
+<span class="fc" id="L17">                task.getLocation().getLocationName(),</span>
+<span class="fc" id="L18">                task.getLocation().getLocationDescription()</span>
+            );
+        }
+
+<span class="fc" id="L22">        return new TaskResponseDto(</span>
+<span class="fc" id="L23">            task.getId(),</span>
+<span class="fc" id="L24">            task.getTitle(),</span>
+<span class="fc" id="L25">            task.getDescription(),</span>
+<span class="fc" id="L26">            task.isDone(),</span>
+<span class="fc" id="L27">            task.getCategory().getName(),</span>
+<span class="pc bpc" id="L28" title="1 of 2 branches missed.">            task.getTags() != null ? task.getTags().stream().map(Tag::getName).toList() : List.of(),</span>
+<span class="fc" id="L29">            task.getCreatedAt(),</span>
+<span class="fc" id="L30">            task.getDueDate(),</span>
+<span class="fc" id="L31">            task.getCanceledAt(),</span>
+            locationDto
+        );
+    }
+
+    public static Task toEntity(TaskRequestDto dto, User user, Category category, List&lt;Tag&gt; tags) {
+<span class="fc" id="L37">        Task task = new Task();</span>
+<span class="fc" id="L38">        task.updateTitle(dto.title());</span>
+<span class="fc" id="L39">        task.updateDescription(dto.description());</span>
+<span class="fc" id="L40">        task.assignUser(user);</span>
+<span class="fc" id="L41">        task.changeCategory(category);</span>
+<span class="fc" id="L42">        task.setTags(tags);</span>
+<span class="fc" id="L43">        task.setDueDate(dto.dueDate());</span>
+
+<span class="fc bfc" id="L45" title="All 2 branches covered.">        if (dto.location() != null) {</span>
+<span class="fc" id="L46">            Location location = new Location(</span>
+<span class="fc" id="L47">                dto.location().latitude(),</span>
+<span class="fc" id="L48">                dto.location().longitude(),</span>
+<span class="fc" id="L49">                dto.location().locationName(),</span>
+<span class="fc" id="L50">                dto.location().locationDescription()</span>
+            );
+<span class="fc" id="L52">            task.setLocation(location);</span>
+        }
+
+<span class="fc" id="L55">        return task;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

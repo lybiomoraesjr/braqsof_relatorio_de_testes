@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GlobalExceptionHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">api</a> &gt; <a href="index.source.html" class="el_package">com.codexasistemas.todoapp.api.exception</a> &gt; <span class="el_source">GlobalExceptionHandler.java</span></div><h1>GlobalExceptionHandler.java</h1><pre class="source lang-java linenums">package com.codexasistemas.todoapp.api.exception;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import jakarta.persistence.EntityNotFoundException;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@RestControllerAdvice
+<span class="fc" id="L16">public class GlobalExceptionHandler {</span>
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity&lt;String&gt; handleNotFound(EntityNotFoundException ex) {
+<span class="nc" id="L20">        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());</span>
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity&lt;String&gt; handleBadRequest(IllegalArgumentException ex) {
+<span class="nc" id="L25">        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());</span>
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity&lt;Object&gt; handleValidationExceptions(MethodArgumentNotValidException ex) {
+<span class="nc" id="L30">        List&lt;String&gt; errors = ex.getBindingResult().getFieldErrors()</span>
+<span class="nc" id="L31">                .stream().map(FieldError::getDefaultMessage).collect(Collectors.toList());</span>
+<span class="nc" id="L32">        return new ResponseEntity&lt;&gt;(errors, HttpStatus.BAD_REQUEST);</span>
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity&lt;String&gt; handleGeneric(Exception ex) {
+<span class="nc" id="L37">        String message = ex.getMessage();</span>
+<span class="nc bnc" id="L38" title="All 4 branches missed.">        if (message == null || message.trim().isEmpty()) {</span>
+<span class="nc" id="L39">            message = &quot;Erro interno do servidor: &quot; + ex.getClass().getSimpleName();</span>
+        } else {
+<span class="nc" id="L41">            message = &quot;Erro interno do servidor: &quot; + message;</span>
+        }
+<span class="nc" id="L43">        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(message);</span>
+    }
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
